@@ -1,23 +1,77 @@
 import './style.css'
-import typescriptLogo from './typescript.svg'
-import { setupCounter } from './counter'
+import P5 from "p5";
+import { Target } from './target';
+import game from './game';
+import { Manager } from './manager';
+import AISettings from './AISettings';
+// import "p5/lib/addons/p5.dom";
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
+// Creating the sketch itself
+function sketch(p5: P5) {
+	// The sketch setup method 
+	p5.setup = () => {
+		// Creating and positioning the canvas
+		p5.createCanvas(game.mapX * game.size, game.mapY * game.size);
+		// canvas.parent("app");
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+		p5.background(200);
+	};
+
+	// The sketch draw method
+	p5.draw = () => {
+		p5.background(200);
+
+		m.update();
+		m.draw(p5);
+
+		Target.drawAll(p5);	
+	};
+};
+
+Target.genTargets();
+const m = new Manager(AISettings.numberOfPlayers);
+new P5(sketch);
+
+const info = document.querySelector("#info") as HTMLDivElement;
+
+// var r = false;
+// var l = false;
+// var d = false;
+// var u = false;
+// var b = false;
+
+// document.addEventListener("keydown", keyDownHandler, false);
+// document.addEventListener("keyup", keyUpHandler, false);
+
+// function keyDownHandler(e: KeyboardEvent) {
+//     if(e.key == "Right" || e.key == "ArrowRight") {
+//         r = true;
+//     }
+//     else if(e.key == "Left" || e.key == "ArrowLeft") {
+//         l = true;
+//     }
+//     else if(e.key == "Up" || e.key == "ArrowUp") {
+//         u = true;
+//     }
+//     else if(e.key == "Down" || e.key == "ArrowDown") {
+//         d = true;
+//     }
+// }
+
+// function keyUpHandler(e: KeyboardEvent) {
+//     if(e.key == "Right" || e.key == "ArrowRight") {
+//         r = false;
+//     }
+//     else if(e.key == "Left" || e.key == "ArrowLeft") {
+//         l = false;
+//     }
+//     else if(e.key == "Up" || e.key == "ArrowUp") {
+//         u = false;
+//     }
+//     else if(e.key == "Down" || e.key == "ArrowDown") {
+//         d = false;
+//     }
+// 	else if(e.key== " "){
+// 		b = true;
+// 	}
+// }
