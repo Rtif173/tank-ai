@@ -19,12 +19,11 @@ export class Visualiser{
         const tt = ("weights"+t) as TextConcat<"weights", typeof t>;
         const ts = ((t != "Shoot" ? "speed":"") + t) as TextConcat<"speed", Exclude <typeof t, "Shoot">> | "Shoot";
         for (let i = 0; i<data.length; i++){
-
             this.td[3*i].style.backgroundColor = `rgba(0,0,0,${data[i]})`;
             this.td[3*i].innerHTML = data[i].toFixed(2);
 
             this.td[3*i+1].style.backgroundColor = `rgba(255,0,0,${player.ai[tt][i]})`;
-            this.td[3*i+1].innerHTML = player.ai[tt][i]?.toFixed(2) || "";
+            this.td[3*i+1].innerHTML = player.ai[tt][i]?.toFixed(2);
 
             this.td[3*i+2].style.backgroundColor = `rgba(0,0,255,${data[i]*player.ai[tt][i]})`;
             this.td[3*i+2].innerHTML = (data[i]*player.ai[tt][i]).toFixed(2);

@@ -21,14 +21,14 @@ export class Player {
     static players: Array<Player> = [];
 
     constructor(
-        generation: number, 
+        generation: number,
         pos: Point2d = {
-            x: Math.random()*game.mapX, 
-            y: Math.random()*game.mapY
+            x: Math.random() * game.mapX,
+            y: Math.random() * game.mapY
         },
-        angle: number = 2 * Math.random() * Math.PI, 
-        pwm?: Array<number>, 
-        pwa?: Array<number>, 
+        angle: number = 2 * Math.random() * Math.PI,
+        pwm?: Array<number>,
+        pwa?: Array<number>,
         pws?: Array<number>
     ) {
         this.tank = new Tank(pos, angle);
@@ -62,14 +62,17 @@ export class Player {
         if (this.ai.Shoot > AISettings.shootThreshold) {
             this.shoot()
         }
-        if(Date.now() - this.buildTime>15000 && Date.now() - this.lastShootTime > 15000){
+        if (Date.now() - this.buildTime > 15000 && Date.now() - this.lastShootTime > 15000) {
             this.destroy();
         }
     }
     draw(p5: P5) {
-        for (const ray of this.rays) {
-            ray.draw(p5)
+        if (AISettings.drawRays) {
+            for (const ray of this.rays) {
+                ray.draw(p5)
+            }
         }
+
         this.tank.draw(p5);
     }
     shoot() {
@@ -86,20 +89,20 @@ export class Player {
     targetAttack() {
         this.score += 1;
         this.numberOfBullets += 1;
-        if(this.score>1){
-            new Player(
-                this.generation + 1,
-                {x: this.tank.x/game.size, y: this.tank.y/game.size},
-                undefined,
-                this.ai.weightsMove,
-                this.ai.weightsAngular,
-                this.ai.weightsShoot
-            )
-        }
+        this.ai.export();
+        // if (this.score > 1) {
+        //     new Player(
+        //         this.generation + 1,
+        //         { x: this.tank.x / game.size, y: this.tank.y / game.size },
+        //         undefined,
+        //         this.ai.weightsMove,
+        //         this.ai.weightsAngular,
+        //         this.ai.weightsShoot
+        //     )
+        // }
     }
     destroy() {
         console.log("die");
         Player.players.splice(Player.players.indexOf(this), 1);
-        new Player(0)
     }
 }

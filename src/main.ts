@@ -1,9 +1,8 @@
 import './style.css'
 import P5 from "p5";
-import { Target } from './target';
 import game from './game';
 import { Manager } from './manager';
-import AISettings from './AISettings';
+import { getPlayerByCoord } from './canvasControl';
 // import "p5/lib/addons/p5.dom";
 
 // Creating the sketch itself
@@ -22,17 +21,21 @@ function sketch(p5: P5) {
 		p5.background(200);
 
 		m.update();
-		m.draw(p5);
-
-		Target.drawAll(p5);	
+		m.draw(p5);	
 	};
+
+	p5.mouseClicked = () => {
+		const newVisualizedPlayer = getPlayerByCoord({x: p5.mouseX, y: p5.mouseY});
+		if (newVisualizedPlayer) {
+			m.visualizedPlayer = newVisualizedPlayer;
+		}
+	}
 };
 
-Target.genTargets();
-const m = new Manager(AISettings.numberOfPlayers);
+let m = new Manager();
 new P5(sketch);
 
-const info = document.querySelector("#info") as HTMLDivElement;
+// const info = document.querySelector("#info") as HTMLDivElement;
 
 // var r = false;
 // var l = false;

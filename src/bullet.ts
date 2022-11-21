@@ -48,7 +48,7 @@ export class Bullet{
                 target.destroy();
                 this.destroy();
                 this.player.targetAttack();
-
+                Bullet.bullets = [];
                 new Target({
                     x: Math.floor(Math.random()*game.mapX),
                     y: Math.floor(Math.random()*game.mapY),

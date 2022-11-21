@@ -75,14 +75,14 @@ export function zeroOrNotIndexes(arr: Array<number>){
 export function calcMean(data: Array<number>, weights: Array<number>) {
     let notZero = 0;
     let sum = 0;
-    for (let i = 0; i < data.length; i++) {
-        const add = data[i] * weights[i];
-        if (Math.abs(add) > 0.01) {
-            sum += add;
+    const maxLen = data.length<weights.length ? data.length : weights.length;
+    for (let i = 0; i < maxLen; i++) {
+        if (weights[i] != 0) {
+            sum += data[i] * weights[i];
             notZero += 1;
         }
     }
-    return sum / (notZero? notZero:1)
+    return sum / (notZero == 0? notZero:1)
 }
 
 export function randomIn(a: number, b: number) {
@@ -96,11 +96,13 @@ export function mutation(
     weights: Array<number>,
     weightsRange: Point2d,
     strengh: number,
-    numberOfMutations: number
+    numberOfMutations: number, 
+    notZeroIndexes: Array<number>
 ) {
-    const len = weights.length;
-    for (let i = 0; i < numberOfMutations; i++) {
-        const mutatingElementIndex = Math.floor(randomIn(0, len));
+    const len = notZeroIndexes.length;
+    let numberOfAwalibleMutations = len > numberOfMutations ? numberOfMutations : len
+    while(numberOfAwalibleMutations>0) {
+        const mutatingElementIndex = notZeroIndexes[Math.floor(randomIn(0, len))];
         if (weights[mutatingElementIndex] < weightsRange.x + strengh) {
             weights[mutatingElementIndex] = randomIn(weightsRange.x, weights[mutatingElementIndex] + strengh)
         } else if (weights[mutatingElementIndex] < weightsRange.y - strengh){
@@ -108,7 +110,9 @@ export function mutation(
         } else {
             weights[mutatingElementIndex] = randomIn( weights[mutatingElementIndex]-strengh, weights[mutatingElementIndex] + strengh)
         }
+        numberOfAwalibleMutations -= 1;
     }
+    
 }
 export function delLink(
     weights: Array<number>,
@@ -125,12 +129,14 @@ export function delLink(
 export function newLink(
     weights: Array<number>,
     zeroIndexes: Array<number>,
-    numberOfMutations: number
+    numberOfMutations: number, 
+    range:Point2d = {x:0,y:1}
 ){
     while(numberOfMutations > 0 && zeroIndexes.length>0){
         let p = Math.floor(randomIn(0,zeroIndexes.length))
-        weights[zeroIndexes[p]] = 1;
+        weights[zeroIndexes[p]] = randomIn(range.x, range.y);
         zeroIndexes.splice(p, 1);
         numberOfMutations -= 1;
     }
+    console.log(weights);
 }
